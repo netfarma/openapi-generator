@@ -1562,6 +1562,9 @@ public class DefaultCodegen implements CodegenConfig {
             Map<String, Schema> allProperties;
             List<String> allRequired;
 
+            //composed schema can also have properties
+            addVars(m, unaliasPropertySchema(allDefinitions, schema.getProperties()), schema.getRequired());
+
             if (supportsInheritance || supportsMixins) {
                 allProperties = new LinkedHashMap<String, Schema>();
                 allRequired = new ArrayList<String>();

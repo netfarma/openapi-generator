@@ -10,6 +10,17 @@ class {{classname}} {{#parentSchema}}extends {{{parent}}} {{/parentSchema}}{{^pa
     protected static $openAPIModelName = '{{name}}';
 
     /**
+      * Array of property to discriminator type mappings. Used for (de)serialization
+      *
+      * @var string[]
+      */
+    protected static $discriminatorMapping = [
+        {{#discriminator.mappedModels}}
+        '{{#uppercase}}{{mappingName}}{{/uppercase}}' => {{{modelName}}}::class,
+        {{/discriminator.mappedModels}}
+    ];
+
+    /**
       * Array of property to type mappings. Used for (de)serialization
       *
       * @var string[]
@@ -397,6 +408,20 @@ class {{classname}} {{#parentSchema}}extends {{{parent}}} {{/parentSchema}}{{^pa
     public function offsetUnset($offset)
     {
         unset($this->container[$offset]);
+    }
+
+    /**
+     * @param $discriminator
+     * @return string
+     */
+    public static function getClassByDiscriminatorValue($discriminator)
+    {
+        $discriminatorKey = strtoupper($discriminator);
+        if(isset(self::$discriminatorMapping[$discriminatorKey])) {
+            return self::$discriminatorMapping[$discriminatorKey];
+        }
+
+        return $discriminator;
     }
 
     /**
